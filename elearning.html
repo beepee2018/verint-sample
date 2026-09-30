@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lead With the Outcome</title>
+<!-- Client fonts: replace with the client's typefaces from client context. Keep a system fallback. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+<style>
+/* ============ BRAND TOKENS: set from client context, nothing else changes ============ */
+:root {
+  --bg:        #07122F;        /* page background (dark mode default for modules) */
+  --surface:   #0D1B45;   /* slide panel */
+  --surface-2: #13245A; /* cards, options */
+  --ink:       #F3F5FF;       /* primary text */
+  --ink-soft:  #B9C3E6;  /* secondary text */
+  --accent:    #7B93FF;    /* single brand accent */
+  --line:      #26386F;      /* borders */
+  --good:      #3CCB8B;      /* correct state */
+  --bad:       #FF8A6B;       /* incorrect state */
+  --font-display: "Plus Jakarta Sans", system-ui, sans-serif;
+  --font-body:    "Plus Jakarta Sans", system-ui, sans-serif;
+  --radius: 10px;
+}
+
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
+  --bg:#F5F7FC; --surface:#FFFFFF; --surface-2:#E8EDFF; --ink:#101532; --ink-soft:#4A5270;
+  --accent:#2B4BF2; --line:#D9DFEF; --good:#1E8E5A; --bad:#C2412D; } }
+:root[data-theme="light"] {
+  --bg:#F5F7FC; --surface:#FFFFFF; --surface-2:#E8EDFF; --ink:#101532; --ink-soft:#4A5270;
+  --accent:#2B4BF2; --line:#D9DFEF; --good:#1E8E5A; --bad:#C2412D; }
+:root[data-theme="dark"] {
+  --bg:#07122F; --surface:#0D1B45; --surface-2:#13245A; --ink:#F3F5FF; --ink-soft:#B9C3E6;
+  --accent:#7B93FF; --line:#26386F; --good:#3CCB8B; --bad:#FF8A6B; }
+:root { box-sizing: border-box; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); background: var(--bg); }
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+button.nav.primary { color: var(--surface); }
+.kc-options, .contrast { overflow-x: auto; }
+/* ============ LAYOUT ============ */
+*, *::before, *::after { box-sizing: border-box; } body, h1, h2, h3, p, ul, ol, blockquote { margin: 0; padding: 0; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 16px; line-height: 1.6; display: flex; flex-direction: column; }
+.topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding: 14px 28px; border-bottom: 1px solid var(--line); }
+.brand { font-family: var(--font-display); font-weight: 700; font-size: 15px; }
+.meta { color: var(--ink-soft); font-size: 13px; }
+.progress-track { height: 3px; background: var(--line); }
+#progress { height: 100%; width: 0; background: var(--accent); transition: width .3s ease; }
+main { flex: 1; display: flex; justify-content: center; padding: 40px 24px; overflow-y: auto; }
+.slide { display: none; width: 100%; max-width: 760px; }
+.slide.active { display: block; }
+h1 { font-family: var(--font-display); font-size: clamp(30px, 5vw, 44px); line-height: 1.12; margin-bottom: 18px; }
+h2 { font-family: var(--font-display); font-size: clamp(24px, 3.6vw, 32px); line-height: 1.2; margin-bottom: 16px; }
+.kicker { color: var(--accent); font-weight: 600; font-size: 14px; margin-bottom: 10px; }
+.lead { font-size: 18px; color: var(--ink-soft); max-width: 62ch; margin-bottom: 24px; }
+p.body { max-width: 66ch; margin-bottom: 16px; }
+/* Intro */
+.objectives { list-style: none; display: grid; gap: 10px; margin-top: 8px; }
+.objectives li { padding: 14px 18px; background: var(--surface-2); border-left: 3px solid var(--accent); border-radius: 0 var(--radius) var(--radius) 0; }
+/* Contrast: two ideas side by side */
+.contrast { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+.contrast > div { padding: 18px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.contrast .strong { border-color: var(--accent); }
+.contrast h3 { font-size: 14px; color: var(--ink-soft); font-weight: 600; margin-bottom: 8px; }
+.contrast blockquote { font-size: 17px; font-weight: 600; margin-bottom: 8px; }
+.callout { padding: 16px 18px; background: var(--surface-2); border-radius: var(--radius); margin-top: 8px; }
+/* Steps: only for true sequences */
+.steps { list-style: none; counter-reset: step; display: grid; gap: 12px; margin-top: 8px; }
+.steps li { counter-increment: step; display: grid; grid-template-columns: 36px 1fr; gap: 12px; align-items: start; }
+.steps li::before { content: counter(step); width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--accent); display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+.steps strong { display: block; }
+/* Knowledge check */
+.kc-question { margin: 22px 0; padding: 20px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.kc-scenario { color: var(--ink-soft); font-size: 15px; margin-bottom: 8px; }
+.kc-q-text { font-weight: 600; margin-bottom: 12px; }
+.kc-options { display: grid; gap: 8px; }
+.kc-option { text-align: left; font: inherit; color: var(--ink); background: var(--surface-2); border: 1px solid var(--line); border-radius: 8px; padding: 12px 16px; cursor: pointer; }
+.kc-option:hover:not(:disabled) { border-color: var(--accent); }
+.kc-option:disabled { cursor: default; opacity: .75; }
+.kc-option.correct { border-color: var(--good); opacity: 1; box-shadow: inset 4px 0 0 var(--good); }
+.kc-option.incorrect { border-color: var(--bad); opacity: 1; box-shadow: inset 4px 0 0 var(--bad); }
+.kc-feedback { margin-top: 10px; font-size: 15px; }
+.kc-result { display: none; margin-top: 8px; padding: 14px 18px; border-radius: var(--radius); background: var(--surface-2); }
+.btn-retry { margin-left: 12px; }
+/* Summary */
+.recap { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin: 18px 0; }
+.recap div { padding: 16px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); }
+.reflect { padding: 18px; border: 1px dashed var(--accent); border-radius: var(--radius); margin-top: 8px; }
+/* Nav */
+.navbar { display: flex; justify-content: space-between; align-items: center; padding: 14px 28px; border-top: 1px solid var(--line); }
+button.nav, .btn-retry { font: inherit; font-weight: 600; padding: 10px 22px; border-radius: 8px; border: 1px solid var(--accent); background: transparent; color: var(--ink); cursor: pointer; }
+button.nav.primary { background: var(--accent); color: var(--bg); }
+button.nav:disabled { opacity: .35; cursor: not-allowed; }
+#counter { color: var(--ink-soft); font-size: 14px; }
+.footer-credit { text-align: center; font-size: 11px; color: var(--ink-soft); padding: 0 0 10px; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 640px) { .contrast { grid-template-columns: 1fr; } main { padding: 28px 16px; } }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <span class="brand">Verint Customer Success</span>
+  <span class="meta">6 minutes, for CSMs</span>
+</header>
+<div class="progress-track"><div id="progress"></div></div>
+
+<main>
+
+  <!-- SLIDE 0: INTRO. Title, the situation, three things they will be able to do. -->
+  <section class="slide active" data-title="Start">
+    <p class="kicker">CSM micro learning · Opening a value-focused EBR</p>
+    <h1>Lead With the Outcome</h1>
+    <p class="lead">You have an EBR with Meridian Mutual next week. The first five minutes decide whether it becomes a status update or a value conversation.</p>
+    <ul class="objectives">
+      <li>Open the EBR with the customer&#8217;s own goal, not a product update</li>
+      <li>Show progress in the customer&#8217;s metrics</li>
+      <li>Name a data gap without losing the room</li>
+    </ul>
+  </section>
+
+  <!-- CONTENT: CONCEPT. One idea, 80 words max. (Before) -->
+  <section class="slide" data-title="Find the outcome">
+    <p class="kicker">Before</p>
+    <h2>Find the outcome</h2>
+    <p class="body">Go back to the success plan. What did Meridian Mutual say they wanted to achieve, and how would they measure it? Look for the customer&#8217;s words, not ours: a business result their leadership already tracks.</p>
+    <div class="callout"><strong>Hold on to this.</strong> If you can&#8217;t state the outcome in one sentence, that&#8217;s your first job, before you build a single slide.</div>
+  </section>
+
+  <!-- CONTENT: CONTRAST. Weak versus strong, from real field language. (During) -->
+  <section class="slide" data-title="The first two minutes">
+    <p class="kicker">During</p>
+    <h2>The first two minutes</h2>
+    <div class="contrast">
+      <div><h3>Activity first</h3><blockquote>&#8220;Let&#8217;s start with adoption by team. Usage is up across the board since last quarter.&#8221;</blockquote><p>Accurate, but it&#8217;s our story. The customer has to connect it to their goals on their own.</p></div>
+      <div class="strong"><h3>Outcome first</h3><blockquote>&#8220;At kickoff, you told us the priority was bringing handle time down before open enrollment. Here&#8217;s where it stands against the baseline, and here&#8217;s what drove it.&#8221;</blockquote><p>Same data. Adoption becomes the reason, not the headline.</p></div>
+    </div>
+    <div class="callout"><strong>Ask:</strong> Could the customer&#8217;s executive repeat your opening to their own boss?</div>
+  </section>
+
+  <!-- CONTENT: CONCEPT 2. (During) -->
+  <section class="slide" data-title="Name the gap">
+    <p class="kicker">During</p>
+    <h2>Name the gap</h2>
+    <p class="body">When you can&#8217;t measure something yet, say so: &#8220;We can&#8217;t see after-call work yet. Here&#8217;s how we&#8217;ll close that by next quarter.&#8221; Customers trust a CSM who names a gap. They stop trusting one who hides it behind usage stats.</p>
+    <div class="callout"><strong>Hold on to this.</strong> A named gap with a plan builds more credibility than a full slide of numbers that miss the point.</div>
+  </section>
+
+  <!-- CONTENT: STEPS. Only when the content is a true sequence. (After) -->
+  <section class="slide" data-title="Lock it in">
+    <p class="kicker">After</p>
+    <h2>Lock it in</h2>
+    <ol class="steps">
+      <li><div><strong>Update the success plan.</strong> Capture anything that changed, so the next review starts from here.</div></li>
+      <li><div><strong>Send a recap within 24 hours.</strong> Outcomes, progress, and next goals, in the customer&#8217;s words.</div></li>
+      <li><div><strong>Share one thing that landed with your manager.</strong> It becomes the starting point for your next coaching conversation.</div></li>
+    </ol>
+  </section>
+
+  <!-- KNOWLEDGE CHECK. Judgment, not recall. Each question: scenario, question,
+       options with data-correct and data-why. Exactly one data-correct="true". -->
+  <section class="slide" id="slide-kc" data-title="Quick check" data-threshold="2">
+    <h2>Three quick calls</h2>
+    <p class="body">Each one is a moment you will face. Pick the best move. You need 2 of 3 to continue.</p>
+
+    <div class="kc-question">
+      <p class="kc-scenario">Two days before the EBR, Meridian Mutual&#8217;s sponsor emails: &#8220;Things are going well. We don&#8217;t really need a formal review.&#8221;</p>
+      <p class="kc-q-text">What&#8217;s your best move?</p>
+      <div class="kc-options">
+        <button class="kc-option" data-correct="false" data-why="Happy today isn&#8217;t proof of value, and without the review you lose the moment to set next goals.">Agree and cancel. A happy customer doesn&#8217;t need a review.</button>
+        <button class="kc-option" data-correct="true"  data-why="You respect their time and keep the value conversation, which is the part that protects the renewal.">Propose a shorter session focused only on their goal and what comes next.</button>
+        <button class="kc-option" data-correct="false" data-why="Cadence matters less than relevance. Pushing the full deck signals the review is for you, not them.">Insist on the full review deck to stay on cadence.</button>
+      </div>
+      <div class="kc-feedback" aria-live="polite"></div>
+    </div>
+
+    <div class="kc-question">
+      <p class="kc-scenario">Meridian Mutual&#8217;s top outcome is reducing after-call work, but that data isn&#8217;t available yet.</p>
+      <p class="kc-q-text">How do you handle it in the EBR?</p>
+      <div class="kc-options">
+        <button class="kc-option" data-correct="true"  data-why="Naming the gap keeps you credible, and the plan to close it becomes a shared commitment.">Name the gap, show the leading indicators you do have, and agree how to close it.</button>
+        <button class="kc-option" data-correct="false" data-why="Skipping their top priority tells them you&#8217;re avoiding it, and they will notice.">Skip that outcome and focus on the ones you can measure.</button>
+        <button class="kc-option" data-correct="false" data-why="Substituting quietly hides the gap. If they spot it later, trust in every other number drops.">Use usage data in its place without calling out the swap.</button>
+      </div>
+      <div class="kc-feedback" aria-live="polite"></div>
+    </div>
+
+    <div class="kc-question">
+      <p class="kc-scenario">Midway through the EBR, the VP of Operations says their priority has shifted from handle time to first-contact resolution.</p>
+      <p class="kc-q-text">What do you do?</p>
+      <div class="kc-options">
+        <button class="kc-option" data-correct="false" data-why="Comparable data about a goal they no longer care about won&#8217;t earn attention or a renewal.">Stay with the original plan so progress is comparable.</button>
+        <button class="kc-option" data-correct="false" data-why="Waiting a quarter means three months of working against the wrong goal.">Note it and revisit at next quarter&#8217;s review.</button>
+        <button class="kc-option" data-correct="true"  data-why="Their outcomes drive the plan. Resetting it together keeps you anchored to what matters to them now.">Capture the new goal and reset the success plan with the sponsor.</button>
+      </div>
+      <div class="kc-feedback" aria-live="polite"></div>
+    </div>
+
+    <div class="kc-result" id="kcResult" aria-live="polite"></div>
+  </section>
+
+  <!-- SUMMARY. Recap cards and one reflection prompt tied to their next real task. -->
+  <section class="slide" data-title="Done">
+    <h2>You&#8217;re ready for the first five minutes</h2>
+    <div class="recap">
+      <div><strong>Find the outcome</strong><p>State the customer&#8217;s goal in one sentence before you build a slide.</p></div>
+      <div><strong>Lead with it</strong><p>Open with their goal and progress against it. Adoption is the reason, not the headline.</p></div>
+      <div><strong>Lock it in</strong><p>Update the plan, send the recap, and share what landed with your manager.</p></div>
+    </div>
+    <div class="reflect"><strong>Before your next EBR:</strong> Can you state the customer&#8217;s outcome in one sentence? If not, start there.</div>
+  </section>
+
+</main>
+
+<nav class="navbar" aria-label="Module navigation">
+  <button class="nav" id="prevBtn" type="button">Back</button>
+  <span id="counter"></span>
+  <button class="nav primary" id="nextBtn" type="button">Next</button>
+</nav>
+<p class="footer-credit">Illustrative sample · Prepared by BP Learning Solutions</p>
+
+<script>
+(function () {
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  const kcSlide = document.getElementById('slide-kc');
+  const questions = kcSlide ? Array.from(kcSlide.querySelectorAll('.kc-question')) : [];
+  const threshold = kcSlide ? parseInt(kcSlide.dataset.threshold || questions.length, 10) : 0;
+  let current = 0;
+  let kcPassed = questions.length === 0;
+
+  function answeredCount() { return questions.filter(q => q.dataset.answered).length; }
+  function correctCount() { return questions.filter(q => q.dataset.answered === 'correct').length; }
+
+  function render() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === current));
+    counter.textContent = (current + 1) + ' of ' + slides.length;
+    progress.style.width = ((current + 1) / slides.length * 100) + '%';
+    prevBtn.style.visibility = current === 0 ? 'hidden' : 'visible';
+    const last = current === slides.length - 1;
+    nextBtn.textContent = last ? 'Complete' : 'Next';
+    nextBtn.disabled = (slides[current] === kcSlide && !kcPassed) || (last && completed);
+    document.querySelector('main').scrollTop = 0;
+    slides[current].querySelector('h1, h2').setAttribute('tabindex', '-1');
+    slides[current].querySelector('h1, h2').focus({ preventScroll: true });
+  }
+
+  let completed = false;
+  function go(dir) {
+    if (dir > 0 && current === slides.length - 1) {
+      completed = true;
+      nextBtn.textContent = 'Completed';
+      nextBtn.disabled = true;
+      // LMS hook: report completion here if the client's LMS requires it.
+      return;
+    }
+    const n = current + dir;
+    if (n < 0 || n >= slides.length) return;
+    if (dir > 0 && slides[current] === kcSlide && !kcPassed) return;
+    current = n;
+    render();
+  }
+
+  function answer(btn) {
+    const q = btn.closest('.kc-question');
+    if (q.dataset.answered) return;
+    const isCorrect = btn.getAttribute('data-correct') === 'true';
+    q.querySelectorAll('.kc-option').forEach(o => {
+      o.disabled = true;
+      if (o.getAttribute('data-correct') === 'true') o.classList.add('correct');
+    });
+    if (!isCorrect) btn.classList.add('incorrect');
+    q.dataset.answered = isCorrect ? 'correct' : 'incorrect';
+    const fb = q.querySelector('.kc-feedback');
+    fb.innerHTML = (isCorrect ? '<strong>Right call.</strong> ' : '<strong>Not the strongest move.</strong> ') +
+      (btn.getAttribute('data-why') || '');
+    if (answeredCount() === questions.length) score();
+  }
+
+  function score() {
+    const got = correctCount();
+    const result = document.getElementById('kcResult');
+    kcPassed = got >= threshold;
+    result.style.display = 'block';
+    result.innerHTML = kcPassed
+      ? '<strong>' + got + ' of ' + questions.length + '.</strong> Continue to the wrap-up.'
+      : '<strong>' + got + ' of ' + questions.length + '.</strong> Read the explanations above, then try again.' +
+        '<button type="button" class="btn-retry" id="retryBtn">Try again</button>';
+    const retry = document.getElementById('retryBtn');
+    if (retry) retry.addEventListener('click', reset);
+    render();
+  }
+
+  function reset() {
+    questions.forEach(q => {
+      delete q.dataset.answered;
+      q.querySelector('.kc-feedback').innerHTML = '';
+      q.querySelectorAll('.kc-option').forEach(o => { o.disabled = false; o.classList.remove('correct', 'incorrect'); });
+    });
+    const result = document.getElementById('kcResult');
+    result.style.display = 'none';
+    result.innerHTML = '';
+    kcPassed = false;
+    render();
+  }
+
+  document.querySelectorAll('.kc-option').forEach(b => b.addEventListener('click', () => answer(b)));
+  prevBtn.addEventListener('click', () => go(-1));
+  nextBtn.addEventListener('click', () => go(1));
+  document.addEventListener('keydown', e => {
+    if (e.target.closest && e.target.closest('.kc-options')) return;
+    if (e.key === 'ArrowRight') go(1);
+    if (e.key === 'ArrowLeft') go(-1);
+  });
+  render();
+})();
+</script>
+</body>
+</html>
